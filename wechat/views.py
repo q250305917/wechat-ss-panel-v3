@@ -23,6 +23,9 @@ import urllib
 from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 #主页显示
+wechat = WeChat()
+AccessToken = wechat.getAccessToken()
+
 def home(request):
     count = Magnet.objects.count() * int(11)
     return HttpResponse(Params.QQqun)
@@ -299,8 +302,6 @@ def getUserQrcode():
 
 #自定义创建菜单接口
 def createTable(request):
-    wechat = WeChat()
-    AccessToken = wechat.getAccessToken()
     param = Params.menu
     params = urllib.parse.urlencode(param).encode(encoding='UTF8')
     # ip_urls = 'https://api.weixin.qq.com/cgi-bin/getcallbackip?access_token='+jsonData['access_token']
@@ -308,18 +309,20 @@ def createTable(request):
     msg = urllib.request.urlopen(create_url,params)
     return HttpResponse(msg)
 
+#删除自定义菜单
+def deleteTable(request):
+    delete_url = 'https://api.weixin.qq.com/cgi-bin/menu/delete?access_token='+AccessToken
+    msg = urllib.request.urlopen(delete_url)
+    return HttpResponse(msg)
+
 #获取自动回复规则接口测试
 def subscribe(request):
-    wechat = WeChat()
-    AccessToken = wechat.getAccessToken()
     create_url = 'https://api.weixin.qq.com/cgi-bin/get_current_autoreply_info?access_token='+AccessToken
     msg = urllib.request.urlopen(create_url)
     return HttpResponse(msg)
 
 #获取用户个人资料
 def getUserInfo(request):
-    wechat = WeChat()
-    AccessToken = wechat.getAccessToken()
     create_url = str('https://api.weixin.qq.com/cgi-bin/user/info?access_token=')+str(AccessToken)+str('&openid=')+str('ojzjrwA_X2C9RFncMahe3scO-J9g')+str('&lang=zh_CN')
     msg = urllib.request.urlopen(create_url)
     return HttpResponse(msg)

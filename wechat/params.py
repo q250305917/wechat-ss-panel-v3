@@ -34,6 +34,11 @@ class Params(object):
           "key": "电影+随机"
       },
       {
+          "type": "click",
+          "name": "作者",
+          "key": "作者"
+      },
+      {
            "name": "MarkSS",
            "sub_button": [
             {
