@@ -14,8 +14,7 @@ from wechat.service.btyunService import BTyunCatch
 from wechat.service.utilsService import Utils
 from wechat.service.wechatService import WeChat
 from wechat.models import Magnet, NodeSs, SsInviteCode, UserCode, User, UserBind, SsNode
-
-from json import loads, dumps #接收和返回JSON
+from json import dumps #接收和返回JSON
 import urllib
 
 
@@ -28,7 +27,7 @@ AccessToken = wechat.getAccessToken()
 
 def home(request):
     count = Magnet.objects.count() * int(11)
-    return HttpResponse(Params.QQqun)
+    return HttpResponse(AccessToken)
 
 #爬行数据
 def getList(name):
@@ -95,7 +94,7 @@ def checkToken(request):
             return HttpResponse('Verify Failed')
     else:
         webData = request.body
-        print("Handle Post webdata is ", webData)   #后台打日志
+        # print("Handle Post webdata is ", webData)   #后台打日志
         recMsg = receive.parse_xml(webData)
         if recMsg.MsgType == 'event':
             if recMsg.Event == 'subscribe':
@@ -123,6 +122,7 @@ def checkToken(request):
             fromUser = recMsg.ToUserName
             if con[0] == 'image':
                 mediaId = con[1]
+                print(mediaId)
                 replyMesssage = reply.ImageMsg(toUser, fromUser, mediaId)
             else:
                 content = con
@@ -173,7 +173,7 @@ def validate(text,openid=''):
     elif str(text) == "私有节点":
         con = getPrivateNode(openid)
         return (False,con)
-    elif str(text) == "作者":
+    elif str(text) == "站长":
         con = getUserQrcode()
         return (False,con)
     else:
@@ -185,7 +185,7 @@ def validate(text,openid=''):
               str("5、回复：MarkSS+账号+密码，输入MarkSS账号密码进行绑定")+str('\n')+\
               str("6、回复：签到，MarkSS签到，悄悄告诉你关注绑定后，PC端跟公众号一共可以签到两次呢！")+str('\n')+\
               str("7、回复：私有节点，获取已绑定的私有节点")+str('\n')+\
-              str("8、回复：作者，获取公众号作者，添加好友，一起搞事情")+str('\n')
+              str("8、回复：站长，获取公众号管理员，添加好友，一起搞事情")+str('\n')
         if text == Params.APP_NAME:
             con = str("欢迎关注")+str(Params.APP_NAME)+str("公众号")+str('\n\n')+str(con)
         return (False, con)
@@ -297,16 +297,18 @@ def getPrivateNode(openid):
 
 #获取作者微信
 def getUserQrcode():
-    con = '9JahT4_L-YXWogECIFRBjf7KbL6smuVs9Bdb7jxrRQY-sWxrtmSmSL83HcyR11xd' #作者二维码，通过测试好上传的图片media_id
+    con = 'b9mzRCcwRGI_sOXZLxVd7ptJgXWtUWkJt6IcpkSsXeRSRyqPMCAknbBBvvNAE5L-' #作者二维码，通过测试好上传的图片media_id
     return ('image', con)
 
 #自定义创建菜单接口
 def createTable(request):
     param = Params.menu
-    params = urllib.parse.urlencode(param).encode(encoding='UTF8')
-    # ip_urls = 'https://api.weixin.qq.com/cgi-bin/getcallbackip?access_token='+jsonData['access_token']
-    create_url = 'https://api.weixin.qq.com/cgi-bin/menu/create?access_token='+AccessToken
-    msg = urllib.request.urlopen(create_url,params)
+    data = dumps(param, ensure_ascii=False)
+    data = bytes(data, 'utf8')
+    #params = urllib.parse.urlencode(param).encode('utf-8')
+    url = 'https://api.weixin.qq.com/cgi-bin/menu/create?access_token='+AccessToken
+    create_url = urllib.request.Request(url)
+    msg = urllib.request.urlopen(create_url, data)
     return HttpResponse(msg)
 
 #删除自定义菜单
@@ -338,4 +340,20 @@ def setTemplate(request):
     params = urllib.parse.urlencode(param).encode(encoding='UTF8')
     create_url = 'https://api.weixin.qq.com/cgi-bin/template/api_set_industry?access_token='+AccessToken
     msg = urllib.request.urlopen(create_url,params)
+    return HttpResponse(msg)
+
+#上传临时素材接口
+def uploadImage(request):
+    from django.conf import settings
+    type = 'image'
+    print(open("D://PY/wechat-ss-panel-v3/static/image/1.jpg", "rb"))
+    filedata = {
+        # "media": str("@")+str(settings.STATIC_URL)+str("image/1.jpg")
+        "media": open("D://PY/wechat-ss-panel-v3/static/image/1.jpg", "rb")
+    }
+    # data = dumps(filedata, ensure_ascii=False)
+    # data = bytes(data, 'utf8')
+    url = 'https://api.weixin.qq.com/cgi-bin/media/upload?access_token='+AccessToken+str('&type=')+str(type)
+    create_url = urllib.request.Request(url)
+    msg = urllib.request.urlopen(create_url, filedata)
     return HttpResponse(msg)
