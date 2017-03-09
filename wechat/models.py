@@ -12,7 +12,7 @@ class Magnet(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'magnet'
+        db_table = 'app_magnet'
 
 
 class UserBind(models.Model):
