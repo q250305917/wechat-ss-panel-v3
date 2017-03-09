@@ -172,6 +172,8 @@ def validate(text,openid=''):
         con = getUserQrcode()
         return (False,con)
     else:
+        text = str(text)[:int(len(Params.CLIENT_NAME))+int(1)].lower()
+        print(text)
         con = str("参考菜单回复获得对应功能：")+str('\n')+\
               str("1、回复：电影+电影名称/相关主演，获取相应的电影磁力")+str('\n')+\
               str("2、回复：电影+随机，随机获取电影磁力")+str('\n')+\
@@ -179,8 +181,9 @@ def validate(text,openid=''):
               str("4、回复：邀请码，获取")+str(Params.CLIENT_NAME)+str("邀请码")+str('\n')+\
               str("5、回复：")+str(Params.CLIENT_NAME)+str("+账号+密码，输入")+str(Params.CLIENT_NAME)+str("账号密码进行绑定")+str('\n')+\
               str("6、回复：签到，")+str(Params.CLIENT_NAME)+("签到，悄悄告诉你关注绑定后，PC端跟公众号一共可以签到两次呢！")+str('\n')+\
-              str("7、回复：私有节点，获取已绑定的私有节点")+str('\n')+\
-              str("8、回复：站长，获取公众号管理员二维码，添加好友，一起搞事情")+str('\n')
+              str("7、回复：私有节点，获取已绑定的私有节点")+str('\n')
+        if Params.IS_ADD_FIREND:
+              con = str(con)+str("8、回复：站长，获取公众号管理员二维码，添加好友，一起搞事情")+str('\n')
         if text == Params.APP_NAME:
             con = str("欢迎关注")+str(Params.APP_NAME)+str("公众号")+str('\n\n')+str(con)
         return (False, con)
