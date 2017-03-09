@@ -1,3 +1,5 @@
 .idea
 wechat/migrations
 panelWechat/settings.py
+wechat/wechat/__pycache__
+wechat/service/__pycache__

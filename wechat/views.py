@@ -159,7 +159,7 @@ def validate(text,openid=''):
     elif str(text) == "邀请码":
         con = getCode(openid)
         return (False,con)
-    elif str(text)[:int(len(Params.CLIENT_NAME))+int(1)].lower() == str(Params.CLIENT_NAME)+str("+"):
+    elif str(text)[:int(len(Params.CLIENT_NAME))+int(1)].lower() == str(Params.CLIENT_NAME.lower())+str("+"):
         con = bindAccount(str(text)[int(len(Params.CLIENT_NAME))+int(1):], openid)
         return (False,con)
     elif str(text) == "签到":
@@ -172,8 +172,6 @@ def validate(text,openid=''):
         con = getUserQrcode()
         return (False,con)
     else:
-        text = str(text)[:int(len(Params.CLIENT_NAME))+int(1)].lower()
-        print(text)
         con = str("参考菜单回复获得对应功能：")+str('\n')+\
               str("1、回复：电影+电影名称/相关主演，获取相应的电影磁力")+str('\n')+\
               str("2、回复：电影+随机，随机获取电影磁力")+str('\n')+\
