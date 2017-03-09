@@ -2,7 +2,7 @@
 class Params(object):
 
     #站点名称
-    CLIENT_NAME = 'MarkSS科学上网'
+    CLIENT_NAME = 'MarkSS'
 
     #站点域名
     CLIENT_DOMAIN = 'http://markss.club'
