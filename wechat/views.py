@@ -23,7 +23,7 @@ from django.views.decorators.csrf import csrf_exempt
 #主页显示
 
 def home(request):
-    return HttpResponse("ssss")
+    return HttpResponse("这是一个公众号后端")
 
 #爬行数据
 def getList(name):
