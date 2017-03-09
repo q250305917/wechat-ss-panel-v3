@@ -180,7 +180,7 @@ def validate(text,openid=''):
               str("5、回复：")+str(Params.CLIENT_NAME)+str("+账号+密码，输入")+str(Params.CLIENT_NAME)+str("账号密码进行绑定")+str('\n')+\
               str("6、回复：签到，")+str(Params.CLIENT_NAME)+("签到，悄悄告诉你关注绑定后，PC端跟公众号一共可以签到两次呢！")+str('\n')+\
               str("7、回复：私有节点，获取已绑定的私有节点")+str('\n')+\
-              str("8、回复：站长，获取公众号管理员，添加好友，一起搞事情")+str('\n')
+              str("8、回复：站长，获取公众号管理员二维码，添加好友，一起搞事情")+str('\n')
         if text == Params.APP_NAME:
             con = str("欢迎关注")+str(Params.APP_NAME)+str("公众号")+str('\n\n')+str(con)
         return (False, con)
