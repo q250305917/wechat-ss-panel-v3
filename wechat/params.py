@@ -2,7 +2,10 @@
 class Params(object):
 
     #站点名称
-    CLIENT = 'CLIENT_NAME'
+    CLIENT_NAME = 'MarkSS'
+
+    #站点域名
+    CLIENT_DOMAIN = 'http://markss.club'
 
     #公众号的名称
     APP_NAME = 'YUNSO云搜'
@@ -27,8 +30,14 @@ class Params(object):
     #站长二维码路径（可自定义路径）
     ADMIN_QRCODE = 'D:\PY\wechat-ss-panel-v3\static\image\/1.jpg'
 
+    #所属行业，默认IT科技，更多行业参数请参考https://mp.weixin.qq.com/wiki/5/6dde9eaa909f83354e0094dc3ad99e05.html
+    INDUSTRY_ID = {
+        "industry_id1": "2",
+        "industry_id2": "4"
+    }
+
     #菜单
-    menu = {
+    MENU = {
      "button": [
       {
           "type": "click",

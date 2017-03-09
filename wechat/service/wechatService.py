@@ -21,9 +21,25 @@ class WeChat(object):
     #检查结果是否正确
     def checkResult(self, res):
         if 'errcode' in res:
-            if res['error'] != 0:
+            if res['errcode'] != 0:
                 return res
         return False
+
+    #请求接口 post
+    #@params url param
+    def request_post(self, url, param=''):
+        create_url = urllib.request.Request(url)
+        data = dumps(param, ensure_ascii=False)
+        data = bytes(data, 'utf8')
+        msg = urllib.request.urlopen(create_url, data).read()
+        json = msg.decode('utf-8')
+        return json
+
+    #请求接口get
+    def request_get(self, url):
+        msg = urllib.request.urlopen(url).read()
+        json = msg.decode('utf-8')
+        return json
 
     #上传临时素材接口
     def uploadImage(self, path, type):
@@ -32,4 +48,26 @@ class WeChat(object):
         }
         url = 'https://api.weixin.qq.com/cgi-bin/media/upload?access_token='+self.AccessToken+str('&type=')+str(type)
         json = requests.post(url, files=filedata).json()
-        return json['media_id']
+        return json
+
+    #自定义菜单接口（创建）
+    def createTable(self, param):
+        url = 'https://api.weixin.qq.com/cgi-bin/menu/create?access_token='+self.AccessToken
+        json = self.request_post(url, param)
+        return json
+
+    #自定义菜单接口（删除）
+    def deleteTable(self):
+        url = 'https://api.weixin.qq.com/cgi-bin/menu/delete?access_token='+self.AccessToken
+        return self.request_get(url)
+
+    #设置所属行业
+    def setTemplate(self, param):
+        url = 'https://api.weixin.qq.com/cgi-bin/template/api_set_industry?access_token='+self.AccessToken
+        json = self.request_post(url, param)
+        return json
+
+    #获取用户资料
+    def getUserInfo(self, openid):
+        url = str('https://api.weixin.qq.com/cgi-bin/user/info?access_token=')+str(self.AccessToken)+str('&openid=')+str(openid)+str('&lang=zh_CN')
+        return self.request_get(url)

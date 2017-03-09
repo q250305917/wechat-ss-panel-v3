@@ -14,7 +14,6 @@ from wechat.service.btyunService import BTyunCatch
 from wechat.service.utilsService import Utils
 from wechat.service.wechatService import WeChat
 from wechat.models import Magnet, NodeSs, SsInviteCode, UserCode, User, UserBind, SsNode
-from json import dumps, loads
 import urllib
 
 
@@ -22,11 +21,9 @@ import urllib
 from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 #主页显示
-wechat = WeChat()
-AccessToken = wechat.getAccessToken()
 
 def home(request):
-    return HttpResponse(AccessToken)
+    return HttpResponse("ssss")
 
 #爬行数据
 def getList(name):
@@ -121,7 +118,6 @@ def checkToken(request):
             fromUser = recMsg.ToUserName
             if con[0] == 'image':
                 mediaId = con[1]
-                print(mediaId)
                 replyMesssage = reply.ImageMsg(toUser, fromUser, mediaId)
             else:
                 content = con
@@ -163,8 +159,8 @@ def validate(text,openid=''):
     elif str(text) == "邀请码":
         con = getCode(openid)
         return (False,con)
-    elif str(text)[:7].lower() == "markss+":
-        con = bindAccount(str(text)[7:], openid)
+    elif str(text)[:int(len(Params.CLIENT_NAME))+int(1)].lower() == str(Params.CLIENT_NAME)+str("+"):
+        con = bindAccount(str(text)[int(len(Params.CLIENT_NAME))+int(1):], openid)
         return (False,con)
     elif str(text) == "签到":
         con = signed(openid)
@@ -180,9 +176,9 @@ def validate(text,openid=''):
               str("1、回复：电影+电影名称/相关主演，获取相应的电影磁力")+str('\n')+\
               str("2、回复：电影+随机，随机获取电影磁力")+str('\n')+\
               str("3、回复：科学上网，获取免费shadowsock账号")+str('\n')+\
-              str("4、回复：邀请码，获取MarkSS邀请码")+str('\n')+\
-              str("5、回复：MarkSS+账号+密码，输入MarkSS账号密码进行绑定")+str('\n')+\
-              str("6、回复：签到，MarkSS签到，悄悄告诉你关注绑定后，PC端跟公众号一共可以签到两次呢！")+str('\n')+\
+              str("4、回复：邀请码，获取")+str(Params.CLIENT_NAME)+str("邀请码")+str('\n')+\
+              str("5、回复：")+str(Params.CLIENT_NAME)+str("+账号+密码，输入")+str(Params.CLIENT_NAME)+str("账号密码进行绑定")+str('\n')+\
+              str("6、回复：签到，")+str(Params.CLIENT_NAME)+("签到，悄悄告诉你关注绑定后，PC端跟公众号一共可以签到两次呢！")+str('\n')+\
               str("7、回复：私有节点，获取已绑定的私有节点")+str('\n')+\
               str("8、回复：站长，获取公众号管理员，添加好友，一起搞事情")+str('\n')
         if text == Params.APP_NAME:
@@ -203,7 +199,7 @@ def getNode():
             con = str(con)+str(text)
     else:
         con = "暂未添加公开节点，请期待添加，或主动联系站长添加\n"
-    con = str(con)+str('登录https://markss.club注册可以获得速度更快的属私有的节点，公开节点不定期更新')+str('\n')+\
+    con = str(con)+str('登录')+str(Params.CLIENT_DOMAIN)+str('注册可以获得速度更快的属私有的节点，公开节点不定期更新')+str('\n')+\
           str('安卓下载地址：')+str("'<a href=")+str(Params.Android_download)+str(">点击下载</a>'")+str('\n')+\
           str('PC下载地址：')+str("'<a href=")+str(Params.PC_download)+str(">点击下载</a>'")+str('\n')+\
           str('IOS推荐：应用商店下载Shadowrocket')
@@ -225,7 +221,6 @@ def getCode(openid):
                     UserCode.objects.create(openid=openid, code=val.code)
                     con = str('邀请码：')+str(val.code)+str('\n')+str('注意：邀请码每人只能获取并使用一次，请妥善保存好自己的邀请码')
                     break
-            print(con)
         else:
             con = str("邀请码已发放完毕，或添加Q群")+str(Params.QQqun)+str("向群主直接索取")
     return con
@@ -263,9 +258,9 @@ def signed(openid):
         if time.time() < updateTime:
            con = "您今天已经签到过啦，一天只能签到一次啦"
         else:
-            markssuser = User.objects.using('db1').filter(id=userID)
+            clientuser = User.objects.using('db1').filter(id=userID)
             item = random.randint(int(Params.checkinMin)*1024*1024, int(Params.checkinMax)*1024*1024)
-            items = int(item)+int(markssuser[0].transfer_enable)
+            items = int(item)+int(clientuser[0].transfer_enable)
             ####更新签到日期
             # timeStamp = Utils.timeStamp(time.time())
             ###
@@ -297,55 +292,47 @@ def getPrivateNode(openid):
             con = str("站长还在偷懒中，忘记添加节点了，赶紧添加站长微信跟他一起搞事情吧！\n")
         con = str(con)+"温馨提示：请不要随便暴露自己的节点密码端口"
     else:
-        con = "您还未进行MarkSS的账号绑定，请先绑定"
+        con = str("您还未进行")+str(Params.CLIENT_NAME)+str("账号绑定，请先绑定")
     return con
 
 #获取作者微信
 def getUserQrcode():
     wechat = WeChat()
     media_id = wechat.uploadImage(Params.ADMIN_QRCODE, 'image')
-    return ('image', media_id)
+    return ('image', media_id['media_id'])
 
 #自定义创建菜单接口
 def createTable(request):
-    param = Params.menu
-    data = dumps(param, ensure_ascii=False)
-    data = bytes(data, 'utf8')
-    #params = urllib.parse.urlencode(param).encode('utf-8')
-    url = 'https://api.weixin.qq.com/cgi-bin/menu/create?access_token='+AccessToken
-    create_url = urllib.request.Request(url)
-    msg = urllib.request.urlopen(create_url, data)
+    param = Params.MENU
+    wechat = WeChat()
+    msg = wechat.createTable(param)
     return HttpResponse(msg)
 
 #删除自定义菜单
 def deleteTable(request):
-    delete_url = 'https://api.weixin.qq.com/cgi-bin/menu/delete?access_token='+AccessToken
-    msg = urllib.request.urlopen(delete_url)
+    wechat = WeChat()
+    msg = wechat.deleteTable()
     return HttpResponse(msg)
 
 #获取自动回复规则接口测试
 def subscribe(request):
-    create_url = 'https://api.weixin.qq.com/cgi-bin/get_current_autoreply_info?access_token='+AccessToken
-    msg = urllib.request.urlopen(create_url)
+    wechat = WeChat()
+    msg = wechat.subscribe()
     return HttpResponse(msg)
 
 #获取用户个人资料
 def getUserInfo(request):
-    create_url = str('https://api.weixin.qq.com/cgi-bin/user/info?access_token=')+str(AccessToken)+str('&openid=')+str('ojzjrwA_X2C9RFncMahe3scO-J9g')+str('&lang=zh_CN')
-    msg = urllib.request.urlopen(create_url)
+    wechat = WeChat()
+    openid = ""
+    msg = wechat.getUserInfo(openid)
     return HttpResponse(msg)
 
 #模板消息接口一个月只能修改一次
 def setTemplate(request):
+    param = Params.INDUSTRY_ID
     wechat = WeChat()
-    AccessToken = wechat.getAccessToken()
-    param = {
-        "industry_id1": "2",
-        "industry_id2": "4"
-    }
-    params = urllib.parse.urlencode(param).encode(encoding='UTF8')
-    create_url = 'https://api.weixin.qq.com/cgi-bin/template/api_set_industry?access_token='+AccessToken
-    msg = urllib.request.urlopen(create_url,params)
+    msg = wechat.setTemplate(param)
     return HttpResponse(msg)
+
 
 
