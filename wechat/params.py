@@ -24,6 +24,8 @@ class Params(object):
     #签到最大流量
     checkinMax = '3000'
 
+    #站长二维码路径（可自定义路径）
+    ADMIN_QRCODE = 'D:\PY\wechat-ss-panel-v3\static\image\/1.jpg'
 
     #菜单
     menu = {
@@ -35,8 +37,8 @@ class Params(object):
       },
       {
           "type": "click",
-          "name": "作者",
-          "key": "作者"
+          "name": "站长",
+          "key": "站长"
       },
       {
            "name": "MarkSS",

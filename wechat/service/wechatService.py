@@ -1,10 +1,11 @@
 from django.conf import settings
 from json import loads, dumps #接收和返回JSON
-import urllib
+import urllib, requests
 class WeChat(object):
     def __init__(self):
         self.appid = settings.GLOBAL_SETTINGS['AppID']
         self.secret = settings.GLOBAL_SETTINGS['AppSecret']
+        self.AccessToken = self.getAccessToken()
 
     #获取微信AccessToken
     def getAccessToken(self):
@@ -13,7 +14,7 @@ class WeChat(object):
         data = data.decode('utf-8')
         jsonData = loads(data)
         if self.checkResult(jsonData) == False:
-             return jsonData['access_token']
+            return jsonData['access_token']
         else:
             return jsonData['errmsg']
 
@@ -23,3 +24,12 @@ class WeChat(object):
             if res['error'] != 0:
                 return res
         return False
+
+    #上传临时素材接口
+    def uploadImage(self, path, type):
+        filedata = {
+            type: open(path, "rb")
+        }
+        url = 'https://api.weixin.qq.com/cgi-bin/media/upload?access_token='+self.AccessToken+str('&type=')+str(type)
+        json = requests.post(url, files=filedata).json()
+        return json['media_id']

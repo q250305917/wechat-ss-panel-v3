@@ -14,7 +14,7 @@ from wechat.service.btyunService import BTyunCatch
 from wechat.service.utilsService import Utils
 from wechat.service.wechatService import WeChat
 from wechat.models import Magnet, NodeSs, SsInviteCode, UserCode, User, UserBind, SsNode
-from json import dumps #接收和返回JSON
+from json import dumps, loads
 import urllib
 
 
@@ -26,7 +26,6 @@ wechat = WeChat()
 AccessToken = wechat.getAccessToken()
 
 def home(request):
-    count = Magnet.objects.count() * int(11)
     return HttpResponse(AccessToken)
 
 #爬行数据
@@ -194,13 +193,16 @@ def validate(text,openid=''):
 def getNode():
     con = str()
     data = NodeSs.objects.all()
-    for val in data:
-        text = str('IP：')+str(val.node_name)+str('\n')+\
-               str('密码：')+str(val.node_server)+str('\n')+\
-               str('端口：')+str(val.node_method)+str('\n')+\
-               str('加密方式：')+str(val.node_info)+str('\n')+\
-               str('服务地址：')+str(val.node_status)+str('\n\n')
-        con = str(con)+str(text)
+    if data:
+        for val in data:
+            text = str('IP：')+str(val.node_name)+str('\n')+\
+                   str('密码：')+str(val.node_server)+str('\n')+\
+                   str('端口：')+str(val.node_method)+str('\n')+\
+                   str('加密方式：')+str(val.node_info)+str('\n')+\
+                   str('服务地址：')+str(val.node_status)+str('\n\n')
+            con = str(con)+str(text)
+    else:
+        con = "暂未添加公开节点，请期待添加，或主动联系站长添加\n"
     con = str(con)+str('登录https://markss.club注册可以获得速度更快的属私有的节点，公开节点不定期更新')+str('\n')+\
           str('安卓下载地址：')+str("'<a href=")+str(Params.Android_download)+str(">点击下载</a>'")+str('\n')+\
           str('PC下载地址：')+str("'<a href=")+str(Params.PC_download)+str(">点击下载</a>'")+str('\n')+\
@@ -282,14 +284,17 @@ def getPrivateNode(openid):
         con = str()
         user = User.objects.using('db1').filter(id=uid)[0]
         ssnode = SsNode.objects.using('db1').filter(type=1)
-        for val in ssnode:
-            text = str(val.name)+str('\n')+str(val.server)+str('\n')+\
-                  str('密码：')+str(user.passwd)+str('\n')+\
-                  str('端口：')+str(user.port)+str('\n')+\
-                  str('加密方式：')+str(user.method)+str('\n')+\
-                  str('协议')+str(user.protocol)+str('：')+str(user.protocol_param)+str('\n')+\
-                  str('混淆')+str(user.obfs)+str('：')+str(user.obfs_param)+str('\n\n')
-            con = str(con)+str(text)
+        if ssnode:
+            for val in ssnode:
+                text = str(val.name)+str('\n')+str(val.server)+str('\n')+\
+                      str('密码：')+str(user.passwd)+str('\n')+\
+                      str('端口：')+str(user.port)+str('\n')+\
+                      str('加密方式：')+str(user.method)+str('\n')+\
+                      str('协议')+str(user.protocol)+str('：')+str(user.protocol_param)+str('\n')+\
+                      str('混淆')+str(user.obfs)+str('：')+str(user.obfs_param)+str('\n\n')
+                con = str(con)+str(text)
+        else:
+            con = str("站长还在偷懒中，忘记添加节点了，赶紧添加站长微信跟他一起搞事情吧！\n")
         con = str(con)+"温馨提示：请不要随便暴露自己的节点密码端口"
     else:
         con = "您还未进行MarkSS的账号绑定，请先绑定"
@@ -297,8 +302,9 @@ def getPrivateNode(openid):
 
 #获取作者微信
 def getUserQrcode():
-    con = 'b9mzRCcwRGI_sOXZLxVd7ptJgXWtUWkJt6IcpkSsXeRSRyqPMCAknbBBvvNAE5L-' #作者二维码，通过测试好上传的图片media_id
-    return ('image', con)
+    wechat = WeChat()
+    media_id = wechat.uploadImage(Params.ADMIN_QRCODE, 'image')
+    return ('image', media_id)
 
 #自定义创建菜单接口
 def createTable(request):
@@ -342,18 +348,4 @@ def setTemplate(request):
     msg = urllib.request.urlopen(create_url,params)
     return HttpResponse(msg)
 
-#上传临时素材接口
-def uploadImage(request):
-    from django.conf import settings
-    type = 'image'
-    print(open("D://PY/wechat-ss-panel-v3/static/image/1.jpg", "rb"))
-    filedata = {
-        # "media": str("@")+str(settings.STATIC_URL)+str("image/1.jpg")
-        "media": open("D://PY/wechat-ss-panel-v3/static/image/1.jpg", "rb")
-    }
-    # data = dumps(filedata, ensure_ascii=False)
-    # data = bytes(data, 'utf8')
-    url = 'https://api.weixin.qq.com/cgi-bin/media/upload?access_token='+AccessToken+str('&type=')+str(type)
-    create_url = urllib.request.Request(url)
-    msg = urllib.request.urlopen(create_url, filedata)
-    return HttpResponse(msg)
+

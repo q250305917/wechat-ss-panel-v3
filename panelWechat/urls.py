@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from wechat.views import home, checkToken, createTable, subscribe, getUserInfo, setTemplate, deleteTable, uploadImage
+from wechat.views import home, checkToken, createTable, subscribe, getUserInfo, setTemplate, deleteTable
 
 urlpatterns = [
     url(r'^$', home, name='home'),
@@ -25,7 +25,6 @@ urlpatterns = [
     url(r'^deleteTable/$', deleteTable),
     url(r'^getUserInfo/$', getUserInfo),
     url(r'^setTemplate/$', setTemplate),
-    url(r'^uploadImage/$', uploadImage),
     url(r'^admin/', admin.site.urls),
 
 ]
