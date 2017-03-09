@@ -28,7 +28,7 @@ class Params(object):
     checkinMax = '3000'
 
     #站长二维码路径（可自定义路径）
-    ADMIN_QRCODE = 'D:\PY\wechat-ss-panel-v3\static\image\/1.jpg'
+    ADMIN_QRCODE = '/home/django/wechat-ss-panel-v3/static/image/1.jpg'
 
     #所属行业，默认IT科技，更多行业参数请参考https://mp.weixin.qq.com/wiki/5/6dde9eaa909f83354e0094dc3ad99e05.html
     INDUSTRY_ID = {
