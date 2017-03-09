@@ -27,6 +27,9 @@ class Params(object):
     #签到最大流量
     checkinMax = '3000'
 
+    #是否开启允许添加管理员为微信好友
+    IS_ADD_FIREND = False
+
     #站长二维码路径（可自定义路径）
     ADMIN_QRCODE = 'D:\PY\wechat-ss-panel-v3\static\image\/1.jpg'
 
