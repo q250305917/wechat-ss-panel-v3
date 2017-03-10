@@ -201,8 +201,8 @@ def getNode():
     else:
         con = "暂未添加公开节点，请期待添加，或主动联系站长添加\n"
     con = str(con)+str('登录')+str(Params.CLIENT_DOMAIN)+str('注册可以获得速度更快的属私有的节点，公开节点不定期更新')+str('\n')+\
-          str('安卓下载地址：')+str("'<a href=")+str(Params.Android_download)+str(">点击下载</a>'")+str('\n')+\
-          str('PC下载地址：')+str("'<a href=")+str(Params.PC_download)+str(">点击下载</a>'")+str('\n')+\
+          str('安卓下载地址：')+str("<a href=")+str(Params.Android_download)+str(">点击下载</a>")+str('\n')+\
+          str('PC下载地址：')+str("<a href=")+str(Params.PC_download)+str(">点击下载</a>")+str('\n')+\
           str('IOS推荐：应用商店下载Shadowrocket')
     return con
 
@@ -298,9 +298,12 @@ def getPrivateNode(openid):
 
 #获取作者微信
 def getUserQrcode():
-    wechat = WeChat()
-    media_id = wechat.uploadImage(Params.ADMIN_QRCODE, 'image')
-    return ('image', media_id['media_id'])
+    if Params.IS_ADD_FIREND:
+        wechat = WeChat()
+        media_id = wechat.uploadImage(Params.ADMIN_QRCODE, 'image')['media_id']
+    else:
+        media_id = "未认证的公众号，无法使用该接口"
+    return ('image', media_id)
 
 #自定义创建菜单接口
 def createTable(request):
