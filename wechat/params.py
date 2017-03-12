@@ -30,13 +30,8 @@ class Params(object):
     #是否开启允许添加管理员为微信好友(未认证订阅号或服务号无法使用请保持False)
     IS_ADD_FIREND = False
 
-<<<<<<< HEAD
     #站长二维码路径（可自定义路径）
     ADMIN_QRCODE = '/home/django/wechat-ss-panel-v3/static/image/1.jpg'
-=======
-    #站长二维码路径（可自定义路径,未认证订阅号或服务号无法使用请保持为空)
-    ADMIN_QRCODE = 'D:\PY\wechat-ss-panel-v3\static\image\/1.jpg'
->>>>>>> 43c98f83084f97f01f46d11faa177d3f2a809556
 
     #所属行业，默认IT科技，更多行业参数请参考https://mp.weixin.qq.com/wiki/5/6dde9eaa909f83354e0094dc3ad99e05.html
     INDUSTRY_ID = {
