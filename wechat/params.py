@@ -43,49 +43,53 @@ class Params(object):
     MENU = {
      "button": [
       {
-        "name": "小工具",
-        "sub_button": [
-        {
-            "type": "click",
-            "name": "随机电影",
-            "key": "电影+随机"
-        },
-        {
-            "type": "click",
-            "name": "站长",
-            "key": "站长"
-        },
-        ]
+            "name": "小工具",
+            "sub_button": [
+                {
+                    "type": "click",
+                    "name": "随机电影",
+                    "key": "电影+随机"
+                },
+                {
+                    "type": "click",
+                    "name": "站长",
+                    "key": "站长"
+                },
+            ]
       },
-
       {
-        "name": CLIENT_NAME,
-        "sub_button": [
-        {
-            "type": "click",
-            "name": "邀请码",
-            "key": "邀请码"
-        },
-        {
-           "type": "click",
-           "name": "签到",
-           "key": "签到"
-        },
-        {
-           "type": "click",
-           "name": "私有节点",
-           "key": "私有节点"
-        },
-        {
-           "type": "click",
-           "name": "科学上网",
-           "key": "科学上网"
-        },
+            "name": CLIENT_NAME,
+            "sub_button": [
+                {
+                    "type": "click",
+                    "name": "邀请码",
+                    "key": "邀请码"
+                },
+                {
+                   "type": "click",
+                   "name": "签到",
+                   "key": "签到"
+                },
+                {
+                   "type": "click",
+                   "name": "私有节点",
+                   "key": "私有节点"
+                },
+                {
+                   "type": "click",
+                   "name": "科学上网",
+                   "key": "科学上网"
+                },
+                {
+                   "type": "click",
+                   "name": "个人信息",
+                   "key": "个人信息"
+                },
+            ]
+      },
         {
            "type": "view",
            "name": "登录",
            "url": CLIENT_DOMAIN
         },
        ]
-   }]
-}

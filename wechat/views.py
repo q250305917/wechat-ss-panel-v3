@@ -11,6 +11,7 @@ from django.http import HttpResponse,HttpResponseBadRequest
 from wechat.service.magnetService import MagnetCatch
 from wechat.service.diaosiService import DiaosiCatch
 from wechat.service.btyunService import BTyunCatch
+from wechat.service.userService import UserService
 from wechat.service.utilsService import Utils
 from wechat.service.wechatService import WeChat
 from wechat.models import Magnet, NodeSs, SsInviteCode, UserCode, User, UserBind, SsNode
@@ -171,6 +172,9 @@ def validate(text,openid=''):
     elif str(text) == "站长":
         con = getUserQrcode()
         return (False,con)
+    elif str(text) == "个人信息":
+        con = getUserInfo(openid)
+        return (False,con)
     else:
         con = str("参考菜单回复获得对应功能：")+str('\n')+\
               str("1、回复：电影+电影名称/相关主演，获取相应的电影磁力")+str('\n')+\
@@ -179,7 +183,8 @@ def validate(text,openid=''):
               str("4、回复：邀请码，获取")+str(Params.CLIENT_NAME)+str("邀请码")+str('\n')+\
               str("5、回复：")+str(Params.CLIENT_NAME)+str("+账号+密码，输入")+str(Params.CLIENT_NAME)+str("账号密码进行绑定")+str('\n')+\
               str("6、回复：签到，")+str(Params.CLIENT_NAME)+("签到，悄悄告诉你关注绑定后，PC端跟公众号一共可以签到两次呢！")+str('\n')+\
-              str("7、回复：私有节点，获取已绑定的私有节点")+str('\n')
+              str("7、回复：私有节点，获取已绑定的私有节点")+str('\n')+\
+              str("8、回复：个人信息，获取已绑定的个人信息")+str('\n')
         if Params.IS_ADD_FIREND:
               con = str(con)+str("8、回复：站长，获取公众号管理员二维码，添加好友，一起搞事情")+str('\n')
         if text == Params.APP_NAME:
@@ -249,9 +254,14 @@ def bindAccount(text, openid):
 
 #签到
 def signed(openid):
-    userID = UserBind.objects.filter(openid=openid)[0].userid
-    user = User.objects.using('db1').filter(id=userID)
+    user = UserService()
+    userID = user.get_UserId_By_OpenId(openid)
     con = str
+    if userID:
+        user = User.objects.using('db1').filter(id=userID)
+    else:
+        con = str("您还未进行")+str(Params.CLIENT_NAME)+str("账号绑定，请先绑定")
+        return con
     if user[0]:
         utils = Utils()
         timeStamp = utils.timeStamp(user[0].last_check_in_time)
@@ -269,14 +279,15 @@ def signed(openid):
             res = int(item)/int(1024)/int(1024)
             con = str("签到成功，恭喜您获得")+str(res)+str("MB流量")
     else:
-        con = str("您还未进行")+str(Params.CLIENT_NAME)+str("账号绑定，请先绑定")
+        con = str("您账号的账号存在异常，请联系管理员")
     return con
 
 #获取私有节点
 def getPrivateNode(openid):
-    user = UserBind.objects.filter(openid=openid)
-    if user:
-        uid = user[0].userid
+    user = UserService()
+    userID = user.get_UserId_By_OpenId(openid)
+    if userID:
+        uid = userID
         con = str()
         user = User.objects.using('db1').filter(id=uid)[0]
         ssnode = SsNode.objects.using('db1').filter(type=1)
@@ -296,14 +307,38 @@ def getPrivateNode(openid):
         con = str("您还未进行")+str(Params.CLIENT_NAME)+str("账号绑定，请先绑定")
     return con
 
+#获取用户个人资料
+def getUserInfo(openid):
+    user = UserService()
+    userID = user.get_UserId_By_OpenId(openid)
+    if userID:
+        userInfo = user.get_User_By_ID(userID)
+        con = str()
+        if userInfo:
+            surplus = round((int(userInfo.transfer_enable)-int(userInfo.d)-int(userInfo.u))/int(1024)/int(1024)/int(1024), 2)
+            used = round((int(userInfo.d)+int(userInfo.u))/int(1024)/int(1024)/int(1024), 2)
+            con = str("用户名：")+str(userInfo.user_name)+str('\n')+\
+                  str("邮箱：")+str(userInfo.email)+str('\n')+\
+                  str("连接密码：")+str(userInfo.passwd)+str('\n')+\
+                  str("连接端口：")+str(userInfo.port)+str('\n')+\
+                  str("已使用流量：")+str(used)+str(" GB")+str('\n')+\
+                  str("剩余流量：")+str(surplus)+str(" GB")+str('\n')+\
+                  str("账号等级：")+str(userInfo.class_field)+str('\n')
+        else:
+            con = str("您账号的账号存在异常，请联系管理员")
+    else:
+        con = str("您还未进行")+str(Params.CLIENT_NAME)+str("账号绑定，请先绑定")
+    return con
+
 #获取作者微信
 def getUserQrcode():
     if Params.IS_ADD_FIREND:
         wechat = WeChat()
-        media_id = wechat.uploadImage(Params.ADMIN_QRCODE, 'image')['media_id']
+        media_id = wechat.uploadMediaTmp(Params.ADMIN_QRCODE, 'image')['media_id']
+        return ('image', media_id)
     else:
-        media_id = "未认证的公众号，无法使用该接口"
-    return ('image', media_id)
+        con = "未认证的公众号，无法使用该接口"
+        return con
 
 #自定义创建菜单接口
 def createTable(request):
@@ -324,19 +359,15 @@ def subscribe(request):
     msg = wechat.subscribe()
     return HttpResponse(msg)
 
-#获取用户个人资料
-def getUserInfo(request):
-    wechat = WeChat()
-    openid = ""
-    msg = wechat.getUserInfo(openid)
-    return HttpResponse(msg)
-
-#模板消息接口一个月只能修改一次
+#设置行业
 def setTemplate(request):
     param = Params.INDUSTRY_ID
     wechat = WeChat()
     msg = wechat.setTemplate(param)
     return HttpResponse(msg)
 
-
-
+#获取设置行业信息
+def getIndustry(request):
+    wechat = WeChat()
+    msg = wechat.getIndustry()
+    return HttpResponse(msg)
