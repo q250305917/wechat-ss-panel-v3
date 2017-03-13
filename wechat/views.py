@@ -285,7 +285,7 @@ def signed(openid):
             # timeStamp = Utils.timeStamp(time.time())
             ###
             User.objects.using('db1').filter(id=userID).update(transfer_enable=items, last_check_in_time=time.time())
-            res = int(item)/int(1024)/int(1024)
+            res = round(int(item)/int(1024)/int(1024), 2)
             con = str("签到成功，恭喜您获得")+str(res)+str("MB流量")
     else:
         con = str("您账号的账号存在异常，请联系管理员")
