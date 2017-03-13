@@ -7,7 +7,7 @@ import wechat.wechat.receive as receive
 import wechat.wechat.reply as reply
 import random
 from wechat.params import Params
-from django.http import HttpResponse,HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseBadRequest
 from wechat.service.magnetService import MagnetCatch
 from wechat.service.diaosiService import DiaosiCatch
 from wechat.service.btyunService import BTyunCatch
@@ -18,15 +18,16 @@ from wechat.models import Magnet, NodeSs, SsInviteCode, UserCode, User, UserBind
 import urllib
 
 
-#包装csrf请求，避免django认为其实跨站攻击脚本
+# 包装csrf请求，避免django认为其实跨站攻击脚本
 from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
-#主页显示
 
+# 主页显示
 def home(request):
     return HttpResponse("这是一个公众号后端")
 
-#爬行数据
+
+# 爬行数据
 def getList(name):
         urlname = urllib.parse.quote(name)
         pages_2 = 1
@@ -39,7 +40,8 @@ def getList(name):
             else:
                 pages_2 = 21
 
-#后台爬虫
+
+# 后台爬虫
 @csrf_exempt
 def bgurlBTpeer(name):
     urlname = urllib.parse.quote(name)
@@ -54,7 +56,7 @@ def bgurlBTpeer(name):
         else:
             pages = 21
 
-#后台爬虫
+# 后台爬虫
 @csrf_exempt
 def bgurlBTyun(name):
     urlname = urllib.parse.quote(name)
@@ -69,7 +71,8 @@ def bgurlBTyun(name):
         else:
             pages = 21
 
-#微信公众号后台统一入口
+
+# 微信公众号后台统一入口
 @csrf_exempt
 def checkToken(request):
     if request.method == 'GET':
@@ -125,7 +128,8 @@ def checkToken(request):
                 replyMesssage = reply.TextMsg(toUser, fromUser, content)
             return HttpResponse(replyMesssage.send())
 
-#公众号请求进入数据库查询
+
+# 公众号请求进入数据库查询
 def getTextForDB(key):
         con = str()
         if key == "随机":
@@ -149,8 +153,9 @@ def getTextForDB(key):
                 getList(key)
         return con
 
-#验证返回信息
-def validate(text,openid=''):
+
+# 验证返回信息
+def validate(text, openid=''):
     con = str()
     if str(text)[:3] == "电影+":
         return (True,str(text)[3:])
@@ -182,7 +187,7 @@ def validate(text,openid=''):
               str("3、回复：科学上网，获取免费shadowsock账号")+str('\n')+\
               str("4、回复：邀请码，获取")+str(Params.CLIENT_NAME)+str("邀请码")+str('\n')+\
               str("5、回复：")+str(Params.CLIENT_NAME)+str("+账号+密码，输入")+str(Params.CLIENT_NAME)+str("账号密码进行绑定")+str('\n')+\
-              str("6、回复：签到，")+str(Params.CLIENT_NAME)+("签到，悄悄告诉你关注绑定后，PC端跟公众号一共可以签到两次呢！")+str('\n')+\
+              str("6、回复：签到，")+str(Params.CLIENT_NAME)+("进行签到，获得科学上网流量")+str('\n')+\
               str("7、回复：私有节点，获取已绑定的私有节点")+str('\n')+\
               str("8、回复：个人信息，获取已绑定的个人信息")+str('\n')
         if Params.IS_ADD_FIREND:
@@ -191,7 +196,8 @@ def validate(text,openid=''):
             con = str("欢迎关注")+str(Params.APP_NAME)+str("公众号")+str('\n\n')+str(con)
         return (False, con)
 
-#获取公开节点列表
+
+# 获取公开节点列表
 def getNode():
     con = str()
     data = NodeSs.objects.all()
@@ -211,7 +217,8 @@ def getNode():
           str('IOS推荐：应用商店下载Shadowrocket')
     return con
 
-#获取邀请码
+
+# 获取邀请码
 def getCode(openid):
     data = UserCode.objects.filter(openid=openid)
     con = str()
@@ -231,7 +238,8 @@ def getCode(openid):
             con = str("邀请码已发放完毕，或添加Q群")+str(Params.QQqun)+str("向群主直接索取")
     return con
 
-#绑定账号
+
+# 绑定账号
 def bindAccount(text, openid):
     list = text.split('+')
     login = list[0]
@@ -252,7 +260,8 @@ def bindAccount(text, openid):
             con = "账号或密码有误，请重新确认"
     return con
 
-#签到
+
+# 签到
 def signed(openid):
     user = UserService()
     userID = user.get_UserId_By_OpenId(openid)
@@ -282,7 +291,8 @@ def signed(openid):
         con = str("您账号的账号存在异常，请联系管理员")
     return con
 
-#获取私有节点
+
+# 获取私有节点
 def getPrivateNode(openid):
     user = UserService()
     userID = user.get_UserId_By_OpenId(openid)
@@ -307,7 +317,8 @@ def getPrivateNode(openid):
         con = str("您还未进行")+str(Params.CLIENT_NAME)+str("账号绑定，请先绑定")
     return con
 
-#获取用户个人资料
+
+# 获取用户个人资料
 def getUserInfo(openid):
     user = UserService()
     userID = user.get_UserId_By_OpenId(openid)
@@ -330,7 +341,8 @@ def getUserInfo(openid):
         con = str("您还未进行")+str(Params.CLIENT_NAME)+str("账号绑定，请先绑定")
     return con
 
-#获取作者微信
+
+# 获取作者微信
 def getUserQrcode():
     if Params.IS_ADD_FIREND:
         wechat = WeChat()
@@ -340,34 +352,47 @@ def getUserQrcode():
         con = "未认证的公众号，无法使用该接口"
         return con
 
-#自定义创建菜单接口
+
+# 自定义创建菜单接口
 def createTable(request):
     param = Params.MENU
     wechat = WeChat()
     msg = wechat.createTable(param)
     return HttpResponse(msg)
 
-#删除自定义菜单
+
+# 删除自定义菜单
 def deleteTable(request):
     wechat = WeChat()
     msg = wechat.deleteTable()
     return HttpResponse(msg)
 
-#获取自动回复规则接口测试
+
+# 获取自动回复规则接口测试
 def subscribe(request):
     wechat = WeChat()
     msg = wechat.subscribe()
     return HttpResponse(msg)
 
-#设置行业
+
+# 设置行业
 def setTemplate(request):
     param = Params.INDUSTRY_ID
     wechat = WeChat()
     msg = wechat.setTemplate(param)
     return HttpResponse(msg)
 
-#获取设置行业信息
+
+# 获取设置行业信息
 def getIndustry(request):
     wechat = WeChat()
     msg = wechat.getIndustry()
+    return HttpResponse(msg)
+
+
+# 获取模板ID
+def getIndustryTemplateId(request):
+    param = {"template_id_short": "TM00015"}
+    wechat = WeChat()
+    msg = wechat.getIndustryTemplateId(param)
     return HttpResponse(msg)

@@ -25,7 +25,7 @@ class DiaosiCatch(object):
         else:
             return "0"
 
-    #解析页面分析获取数据
+    # 解析页面分析获取数据
     def getHash(self, url, lable):
         html = self.getHtml(url)
         if html:

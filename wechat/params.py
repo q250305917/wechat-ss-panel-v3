@@ -1,45 +1,45 @@
-#常量设置
+# 常量设置
 class Params(object):
 
-    #站点名称
+    # 站点名称
     CLIENT_NAME = 'MarkSS'
 
-    #站点域名
+    # 站点域名
     CLIENT_DOMAIN = 'http://markss.club'
 
-    #公众号的名称
+    # 公众号的名称
     APP_NAME = 'YUNSO云搜'
 
-    #公众号验证的TOCKEN
+    # 公众号验证的TOCKEN
     APP_TOCKEN = 'yunso2016'
 
-    #无码时提示获取QQ群
+    # 无码时提示获取QQ群
     QQqun = '570508797'
 
-    #推荐安卓下载的地址
+    # 推荐安卓下载的地址
     Android_download = '"https://bit.no.com:43110/shadowsocksr.bit/ssr_3.2.7.14.apk"'
 
-    #推荐PC下载地址
+    # 推荐PC下载地址
     PC_download = '"https://pan.baidu.com/s/1skEESaT"'
 
-    #签到最少流量 单位MB
+    # 签到最少流量 单位MB
     checkinMin = '1000'
-    #签到最大流量
+    # 签到最大流量
     checkinMax = '3000'
 
-    #是否开启允许添加管理员为微信好友(未认证订阅号或服务号无法使用请保持False)
+    # 是否开启允许添加管理员为微信好友(未认证订阅号或服务号无法使用请保持False)
     IS_ADD_FIREND = False
 
-    #站长二维码路径（可自定义路径,未认证订阅号或服务号无法使用请保持为空)
+    # 站长二维码路径（可自定义路径,未认证订阅号或服务号无法使用请保持为空)
     ADMIN_QRCODE = 'D:\PY\wechat-ss-panel-v3\static\image\/1.jpg'
 
-    #所属行业，默认IT科技，更多行业参数请参考https://mp.weixin.qq.com/wiki/5/6dde9eaa909f83354e0094dc3ad99e05.html
+    # 所属行业，默认IT科技，更多行业参数请参考https://mp.weixin.qq.com/wiki/5/6dde9eaa909f83354e0094dc3ad99e05.html
     INDUSTRY_ID = {
         "industry_id1": "2",
         "industry_id2": "4"
     }
 
-    #菜单
+    # 菜单
     MENU = {
      "button": [
       {

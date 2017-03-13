@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-#工具服务类
+# 工具服务类
 import base64
 import hashlib
 import time
@@ -21,7 +21,7 @@ class Utils(object):
         'DNT': '1'
     }
 
-    #简单校验Token
+    # 简单校验Token
     def tokenCheck(self, code):
         token = 'yunso'
         if(code == token):
@@ -29,7 +29,7 @@ class Utils(object):
         else:
             return False
 
-    #简单单位转换
+    # 简单单位转换
     def transformation(self, size, cp):
         if cp == 'GB':
             size = float(size)*int(1024)*int(1024)*int(1024)
@@ -41,7 +41,7 @@ class Utils(object):
             size = float(size)*int(1024)
             return int(size)
 
-    #单位转换
+    # 单位转换
     def flowAutoShow(self, value):
         #量换算
         tokb = 1024
@@ -57,7 +57,7 @@ class Utils(object):
             return str(round(value,2))+""
 
 
-    #获取当前时间
+    # 获取当前时间
     def dateformation(self):
         ISOTIMEFORMAT='%Y-%m-%d %X'
         t = time.strftime(ISOTIMEFORMAT, time.localtime(time.time()))
@@ -81,7 +81,7 @@ class Utils(object):
         opener.addheaders = header
         return opener
 
-    #中文编码转换base64
+    # 中文编码转换base64
     def utf8_base64(self, string):
         unicode = string.encode("gbk")
         newStr = base64.b64encode(unicode)
@@ -90,13 +90,13 @@ class Utils(object):
         # endMd5 = md5.hexdigest()
         return newStr
 
-    #base64编码转换中文
+    # base64编码转换中文
     def base64_utf8(self, string):
         unicode = base64.b64decode(string)
         newStr = unicode.decode('gbk')
         return newStr
 
-    #md5加密处理
+    # md5加密处理
     def md5(self, str):
         m = hashlib.md5()
         m.update(str)
