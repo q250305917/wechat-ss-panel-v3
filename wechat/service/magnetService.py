@@ -31,7 +31,7 @@ class MagnetCatch(object):
         else:
             return "0"
 
-    #获取页面分析页面数据并抓取所需数据
+    # 获取页面分析页面数据并抓取所需数据
     def getHash(self, url, lable):
         html = self.getHtml(url)
         # print(html)

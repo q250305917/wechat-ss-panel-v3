@@ -8,7 +8,7 @@ class File(object):
         self
     # 生成一个新的文件夹或返回文件路径
     def mkdirFile(self):
-        #定义文件夹的名字
+        # 定义文件夹的名字
         t = time.localtime(time.time())
         foldername = str(t.__getattribute__("tm_year"))+"-"+str(t.__getattribute__("tm_mon"))+"-"+str(t.__getattribute__("tm_mday"))
         picpath = 'D:\\MagnetDownload\\%s' % (foldername) #下载到的本地目录
