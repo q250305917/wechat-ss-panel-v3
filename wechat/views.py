@@ -138,7 +138,7 @@ def getTextForDB(key):
             i = 1
             while i < 10:
                 item = random.randint(0, max)
-                text = str(data[item].mgTitle)+str('\n')+str("Magnet:?xt=urn:btih:")+str(data[item].mgList)+str('\n')+str('\n')
+                text = str(data[item].mgTitle)+str('\n')+str("magnet:?xt=urn:btih:")+str(data[item].mgList)+str('\n')+str('\n')
                 con = str(con)+str(text)
                 i += 1
         else:
@@ -146,7 +146,7 @@ def getTextForDB(key):
             datas = data.order_by('-mgHot')[0:10]
             if datas:
                 for val in datas:
-                    text = str(val.mgTitle)+str('\n')+str("Magnet:?xt=urn:btih:")+str(val.mgList)+str('\n')+str('\n')
+                    text = str(val.mgTitle)+str('\n')+str("magnet:?xt=urn:btih:")+str(val.mgList)+str('\n')+str('\n')
                     con = str(con)+str(text)
             else:
                 con = "暂时未查询到您需要的资源，正在启动爬虫......请30秒后重新搜索您查找的资源"
@@ -285,7 +285,7 @@ def signed(openid):
             # timeStamp = Utils.timeStamp(time.time())
             ###
             User.objects.using('db1').filter(id=userID).update(transfer_enable=items, last_check_in_time=time.time())
-            res = int(item)/int(1024)/int(1024)
+            res = round(int(item)/int(1024)/int(1024), 2)
             con = str("签到成功，恭喜您获得")+str(res)+str("MB流量")
     else:
         con = str("您账号的账号存在异常，请联系管理员")
