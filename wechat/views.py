@@ -303,7 +303,8 @@ def getPrivateNode(openid):
         ssnode = SsNode.objects.using('db1').filter(type=1)
         if ssnode:
             for val in ssnode:
-                text = str(val.name)+str('\n')+str(val.server)+str('\n')+\
+                text = str(val.name)+str('\n')+\
+                      str('IP：')+str(val.server)+str('\n')+\
                       str('密码：')+str(user.passwd)+str('\n')+\
                       str('端口：')+str(user.port)+str('\n')+\
                       str('加密方式：')+str(user.method)+str('\n')+\
