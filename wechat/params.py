@@ -16,10 +16,10 @@ class Params(object):
     # 无码时提示获取QQ群
     QQqun = '570508797'
 
-    # 推荐安卓下载的地址
+    # 推荐安卓下载的地址 URL必须带双引号
     Android_download = '"https://bit.no.com:43110/shadowsocksr.bit/ssr_3.2.7.14.apk"'
 
-    # 推荐PC下载地址
+    # 推荐PC下载地址 URL必须带双引号
     PC_download = '"https://pan.baidu.com/s/1skEESaT"'
 
     # 签到最少流量 单位MB
