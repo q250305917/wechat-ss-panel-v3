@@ -82,7 +82,8 @@ def checkToken(request):
         nonce = request.GET.get('nonce')
         token = Params.APP_TOCKEN
         list = [token, timestamp, nonce]
-        list.sort()
+        if list:
+            list.sort()
         sha1 = hashlib.sha1()
         for val in list:
             sha1.update(val.encode())
