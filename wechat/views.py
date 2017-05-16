@@ -215,7 +215,8 @@ def getNode():
     con = str(con)+str('登录')+str(Params.CLIENT_DOMAIN)+str('注册可以获得速度更快的属私有的节点，公开节点不定期更新')+str('\n')+\
           str('安卓下载地址：')+str("<a href=")+str(Params.Android_download)+str(">点击下载</a>")+str('\n')+\
           str('PC下载地址：')+str("<a href=")+str(Params.PC_download)+str(">点击下载</a>")+str('\n')+\
-          str('IOS推荐：应用商店下载Shadowrocket')
+          str('IOS推荐：应用商店下载Shadowrocket')+str('\n')+\
+          str('如遇到节点失效请及时加Q群联系群主：')+str(Params.QQqun)+str('\n')
     return con
 
 
