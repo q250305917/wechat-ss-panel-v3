@@ -143,7 +143,7 @@ def getTextForDB(key):
                 con = str(con)+str(text)
                 i += 1
         else:
-            data = Magnet.objects.filter(mgLable__contains=key) | Magnet.objects.filter(mgTitle__contains=key)
+            data = Magnet.objects.filter(mgLable__contains=key.replace(' ', '')) | Magnet.objects.filter(mgTitle__contains=key.replace(' ', ''))
             datas = data.order_by('-mgHot')[0:10]
             if datas:
                 for val in datas:
@@ -151,7 +151,7 @@ def getTextForDB(key):
                     con = str(con)+str(text)
             else:
                 con = "暂时未查询到您需要的资源，正在启动爬虫......请30秒后重新搜索您查找的资源"
-                getList(key)
+                getList(key.lstrip())
         return con
 
 
