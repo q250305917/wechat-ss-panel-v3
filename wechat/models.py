@@ -47,7 +47,7 @@ class NodeSs(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'nodess'
+        db_table = 'node_ss'
 
 
 
