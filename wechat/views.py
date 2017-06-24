@@ -33,7 +33,7 @@ def getList(name):
         pages_2 = 1
         diaosi = DiaosiCatch()
         while pages_2 < 20:
-            host_2 = "http://www.diaosisou.com/list/"+str(urlname)+"/"+str(pages_2)
+            host_2 = "http://www.diaosisou.net/list/"+str(urlname)+"/"+str(pages_2)
             diaosiHtml = diaosi.getHash(host_2, name)
             if diaosiHtml:
                 pages_2 += 1
