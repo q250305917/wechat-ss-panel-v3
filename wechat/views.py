@@ -151,7 +151,10 @@ def getTextForDB(key):
                     con = str(con)+str(text)
             else:
                 con = "暂时未查询到您需要的资源，正在启动爬虫......请30秒后重新搜索您查找的资源"
-                getList(key.lstrip())
+                try:
+                    getList(key.lstrip())
+                except(BaseException):
+                    con = "爬虫程序被拒绝"
         return con
 
 
