@@ -152,7 +152,7 @@ def getTextForDB(key):
             else:
                 con = "暂时未查询到您需要的资源，正在启动爬虫......请30秒后重新搜索您查找的资源"
                 try:
-                    getList(key.lstrip())
+                    bgurlBTpeer(key.lstrip())
                 except(BaseException):
                     con = "爬虫程序被拒绝"
         return con
