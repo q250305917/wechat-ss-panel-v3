@@ -33,7 +33,7 @@ def getList(name):
         pages_2 = 1
         diaosi = DiaosiCatch()
         while pages_2 < 20:
-            host_2 = "http://www.diaosisou.com/list/"+str(urlname)+"/"+str(pages_2)
+            host_2 = "http://www.diaosisou.net/list/"+str(urlname)+"/"+str(pages_2)
             diaosiHtml = diaosi.getHash(host_2, name)
             if diaosiHtml:
                 pages_2 += 1
@@ -151,7 +151,10 @@ def getTextForDB(key):
                     con = str(con)+str(text)
             else:
                 con = "暂时未查询到您需要的资源，正在启动爬虫......请30秒后重新搜索您查找的资源"
-                getList(key.lstrip())
+                try:
+                    getList(key.lstrip())
+                except(BaseException):
+                    con = "爬虫程序被拒绝"
         return con
 
 
