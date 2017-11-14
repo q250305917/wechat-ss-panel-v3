@@ -109,3 +109,7 @@ class Utils(object):
         timeArray = time.strptime(lastCheck, "%Y-%m-%d %H:%M:%S")
         timeStamp = int(time.mktime(timeArray))
         return timeStamp
+
+    # 打印对象
+    def printObj(self, obj):
+        print('\n'.join(['%s:%s' % item for item in obj.__dict__.items()]))
