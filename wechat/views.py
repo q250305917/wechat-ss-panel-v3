@@ -195,7 +195,7 @@ def validate(text, openid=''):
               str("7、回复：私有节点，获取已绑定的私有节点")+str('\n')+\
               str("8、回复：个人信息，获取已绑定的个人信息")+str('\n')
         if Params.IS_ADD_FIREND:
-              con = str(con)+str("8、回复：站长，获取公众号管理员二维码，添加好友，一起搞事情")+str('\n')
+              con = str(con)+str("9、回复：站长，获取公众号管理员二维码，添加好友，一起搞事情")+str('\n')
         if text == Params.APP_NAME:
             con = str("欢迎关注")+str(Params.APP_NAME)+str("公众号")+str('\n\n')+str(con)
         return (False, con)
@@ -305,7 +305,7 @@ def getPrivateNode(openid):
         uid = userID
         con = str()
         user = User.objects.using('db1').filter(id=uid)[0]
-        ssnode = SsNode.objects.using('db1').filter(type=1)
+        ssnode = SsNode.objects.using('db1').filter(type=1, node_class__lte=user.class_field, node_group__lte=user.node_group)
         if ssnode:
             for val in ssnode:
                 text = str(val.name)+str('\n')+\

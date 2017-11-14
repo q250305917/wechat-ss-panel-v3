@@ -67,23 +67,23 @@ class WeChat(object):
         return self.request_get(url)
 
 
-    #获取用户资料
+    # 获取用户资料
     def getUserInfo(self, openid):
         url = str('https://api.weixin.qq.com/cgi-bin/user/info?access_token=')+str(self.AccessToken)+str('&openid=')+str(openid)+str('&lang=zh_CN')
         return self.request_get(url)
 
-    #设置所属行业
+    # 设置所属行业
     def setTemplate(self, param):
         url = 'https://api.weixin.qq.com/cgi-bin/template/api_set_industry?access_token='+self.AccessToken
         json = self.request_post(url, param)
         return json
 
-    #获取行业信息
+    # 获取行业信息
     def getIndustry(self):
         url = str('https://api.weixin.qq.com/cgi-bin/template/get_industry?access_token=')+str(self.AccessToken)
         return self.request_get(url)
 
-    #获得模板ID
+    # 获得模板ID
     def getIndustryTemplateId(self, param):
         url = 'https://api.weixin.qq.com/cgi-bin/template/api_add_template?access_token='+self.AccessToken
         json = self.request_post(url, param)
