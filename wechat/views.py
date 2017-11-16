@@ -305,7 +305,7 @@ def getPrivateNode(openid):
         uid = userID
         con = str()
         user = User.objects.using('db1').filter(id=uid)[0]
-        ssnode = SsNode.objects.using('db1').filter(type=1, node_class__lte=user.class_field, node_group__lte=user.node_group)
+        ssnode = SsNode.objects.using('db1').filter(type=1, node_class__lte=user.class_field, node_group=user.node_group)
         if ssnode:
             for val in ssnode:
                 text = str(val.name)+str('\n')+\
